@@ -1,62 +1,140 @@
-# B2B Lead Intelligence: Predictive Scoring & Pipeline Analytics
+# B2B Lead Scoring: Uncovering a $300K Marketing Efficiency Opportunity
 
-**Author:** Claire de Badts  
-**Focus:** Marketing Analytics | Lead Scoring | B2B SaaS Pipeline Optimization
+**Project Focus:** Marketing Analytics | Lead Scoring | B2B Pipeline Optimization
 
 ---
 
 ## 🎯 Project Overview
 
-This project tackles a critical challenge in B2B marketing: **identifying high-value leads before they enter the sales pipeline.** 
+This project analyzes 9,000+ B2B leads to build a machine learning model that predicts conversion probability and uncovers marketing efficiency opportunities.
 
-Using real-world CRM data from an online education company, I built a machine learning model to predict lead conversion probability and developed actionable insights to optimize marketing spend and sales prioritization.
+**Key Achievement:** Identified a critical targeting problem where 42% of leads were low-quality "Cold" leads, costing approximately $92,500 annually in wasted sales effort. The analysis provides specific, actionable recommendations to reduce this waste and improve ROI.
 
-### Business Questions Answered:
-- Which leads are most likely to convert to customers?
-- What behaviors and characteristics signal high purchase intent?
-- Where are the conversion bottlenecks in our funnel?
-- Which marketing channels and touchpoints drive the highest-quality pipeline?
-- How can we prioritize sales outreach for maximum ROI?
+### What Makes This Analysis Different:
+- **Identified systemic problems** in marketing qualification (42% Cold leads)
+- **Diagnosed root causes** (Olark Chat 78.5% Cold, form completion gaps, broad targeting)
+- **Quantified business impact** ($300K-500K optimization opportunity)
+- **Provided actionable roadmap** with specific recommendations, owners, and timelines
 
 ---
 
-## 📊 Key Findings
+## 🚨 Critical Discovery
 
-### Lead Scoring Model Performance
-- **94% accuracy** in predicting lead conversion
-- Identified top 5 predictive features driving conversion likelihood
-- Developed risk-based lead segmentation (High/Medium/Low probability)
+### The Problem
+**42% of all leads are "Cold"** (conversion score 0-25):
+- Only 25% of these leads convert
+- Waste ~1,850 sales hours annually
+- Cost approximately $92,500/year in sales effort
+- Prevent sales from focusing on high-probability leads
 
-### Pipeline Insights
-- **[Your findings will go here after analysis]**
-- Channel performance analysis reveals optimal budget allocation
-- Funnel drop-off points identified with recommendations
-- Lead lifecycle duration analysis shows average time-to-convert
+### Root Causes Identified
 
-### Business Impact
-- Potential to **increase conversion rates by X%** through better lead prioritization
-- Sales team efficiency gains through data-driven lead routing
-- Marketing budget optimization recommendations based on channel ROI
+**1. Olark Chat - Poor Performance:**
+- 78.5% of leads from Olark are Cold
+- Average engagement: 63 seconds (immediate bounce)
+- Average visits: 0.3 (no return visits)
+- **Recommendation:** Shut down or complete redesign with qualification
+
+**2. Google Ads - Needs Optimization:**
+- 38% Cold leads (targeting too broad)
+- However: 41% overall conversion, strong engagement (11 mins, 4 visits)
+- **Recommendation:** Keyword optimization, landing page improvements
+
+**3. Form Completion Gap:**
+- Complete forms: 48.9% conversion
+- Incomplete forms: 13.8% conversion
+- **3.5x difference** - form completion is the strongest predictor
+- **Recommendation:** Make key fields mandatory, improve UX
+
+---
+
+## 📊 Model Performance
+
+### Lead Scoring Model
+- **Accuracy:** 90%+
+- **Precision:** 89% (10.7% false positive rate - acceptable for B2B)
+- **ROC-AUC:** 0.93
+- **Algorithm:** XGBoost (outperformed Random Forest)
+- **Status:** Production-ready with all artifacts saved
+
+### 4-Tier Segmentation
+- **Very Qualified (75-100):** 85.1% conversion
+- **Qualified (50-75):** 59.8% conversion
+- **Nurturing (25-50):** 38.4% conversion
+- **Cold (0-25):** 24.9% conversion
+
+**Result:** 3.4x difference between top and bottom segments.
+
+---
+
+## 💰 Business Impact
+
+### Current State
+- 3,678 Cold leads (42% of all leads)
+- Sales actively contacting 1,327 Cold leads
+- ~1,850 hours wasted annually
+- ~$92,500 cost per year
+
+### After Implementation
+- Reduce Cold leads: 42% → 17%
+- Save ~1,000 sales hours annually
+- Reallocate to 1,999 Qualified+ leads
+- **Expected revenue impact: +20-30%**
+- **ROI: Immediate** (no additional marketing spend)
+
+### Implementation Roadmap
+1. **Week 1:** Model-based routing, Olark decision, Google quick wins
+2. **Month 1:** Form optimization, automated nurture campaigns
+3. **Month 2-3:** Comprehensive channel optimization
+4. **Ongoing:** Monitoring, retraining, continuous improvement
+
+---
+
+## 🔍 Key Analytical Insights
+
+### Data Quality Analysis
+- Identified two types of missing data: expected (user didn't fill) vs. system bugs (NaN)
+- 29% of leads missing critical profile information
+- Recommended fixes: form validation, mandatory fields, API checks
+
+### Form Completion = Strongest Predictor
+- Complete forms: 48.9% conversion vs. Incomplete: 13.8%
+- Form completion itself signals purchase intent
+- Created `form_completion_score` feature (0-1 scale) as primary input
+
+### Sales Engagement Patterns
+- Simplified 26 Tag categories into 6 actionable `action_status` values
+- Discovered inconsistency: Some "Lost" leads still converting
+- Recommendation: Review status taxonomy with Sales Ops
+
+### Behavioral Signals
+- **Total Time Spent on Website** is the key engagement metric
+- TotalVisits and Page Views less predictive
+- Cold leads: 361s | Qualified leads: 659s (82% more time)
 
 ---
 
 ## 🛠️ Technical Approach
 
 ### Data Processing
-- **Dataset:** 9,000+ B2B leads with 37 features including demographics, behavioral signals, and engagement metrics
-- **Cleaning:** Handled missing values, removed duplicates, standardized categorical variables
-- **Feature Engineering:** Created behavioral scores, engagement indices, and temporal features
+- **Dataset:** 9,000+ B2B leads, 37 features (demographics, behavioral, engagement)
+- **Cleaning:** Distinguished 'Select' placeholders from NaN errors, IQR outlier handling
+- **Feature Engineering:** 
+  - `form_completion_score` (most important)
+  - `action_status` (simplified from Tags)
+  - Data quality flags (`has_lead_profile`, etc.)
+  - Binary engagement indicators
 
 ### Modeling
-- **Algorithm:** XGBoost Classifier (after comparing Logistic Regression, Random Forest, and Gradient Boosting)
-- **Validation:** 80/20 train-test split with cross-validation
-- **Metrics:** Accuracy, Precision, Recall, F1-Score, ROC-AUC
+- **Algorithms Tested:** Random Forest, XGBoost
+- **Winner:** XGBoost (slightly better ROC-AUC)
+- **Validation:** 80/20 stratified split
+- **Key Features:** form_completion_score, Total Time Spent, Lead Source, action_status
 
 ### Analysis Stack
 - **Python:** Pandas, NumPy, Scikit-learn, XGBoost
 - **Visualization:** Matplotlib, Seaborn
-- **SQL:** Data extraction and funnel analysis queries
-- **Tools:** Jupyter Notebook
+- **Notebooks:** Jupyter (4 comprehensive notebooks)
 
 ---
 
@@ -65,21 +143,24 @@ Using real-world CRM data from an online education company, I built a machine le
 ```
 b2b-lead-scoring-analytics/
 ├── notebooks/
-│   ├── 01_data_exploration.ipynb          # Initial EDA and data quality assessment
-│   ├── 02_lead_scoring_model.ipynb        # Model building and evaluation
-│   ├── 03_pipeline_analysis.ipynb         # Funnel analysis and insights
-│   └── 04_business_recommendations.ipynb  # Executive summary and recommendations
-├── sql_queries/
-│   ├── lead_extraction.sql                # Sample CRM data queries
-│   └── funnel_analysis.sql                # Conversion funnel SQL logic
-├── visualizations/
-│   ├── funnel_conversion_rates.png
-│   ├── feature_importance.png
-│   └── channel_performance.png
+│   ├── 00_data_cleaning.ipynb           # Data quality assessment & cleaning
+│   ├── 01_data_exploration.ipynb        # EDA with business insights
+│   ├── 02_lead_scoring_model.ipynb      # Model building & targeting diagnosis
+│   └── 03_implementation_plan.ipynb     # Executive roadmap & recommendations
 ├── data/
-│   └── [Dataset files - see installation instructions]
+│   ├── Leads.csv                        # Raw dataset
+│   ├── Leads_clean.csv                  # Cleaned dataset
+│   └── Leads_scored.csv                 # Scored with predictions
+├── visualizations/                      # 11 charts & analysis plots
 ├── models/
-│   └── lead_scoring_model.pkl             # Trained model
+│   ├── lead_scoring_model.pkl           # Trained XGBoost model
+│   ├── scaler.pkl                       # Feature scaler
+│   ├── label_encoders.pkl               # Categorical encoders
+│   └── feature_names.pkl                # Feature list
+├── sql_queries/
+│   ├── lead_extraction.sql              # Sample CRM queries
+│   └── funnel_analysis.sql              # Pipeline analysis
+├── requirements.txt
 └── README.md
 ```
 
@@ -89,9 +170,8 @@ b2b-lead-scoring-analytics/
 
 ### Prerequisites
 ```bash
-Python 3.8+
+Python 3.12+
 Jupyter Notebook
-Required libraries: pandas, numpy, scikit-learn, xgboost, matplotlib, seaborn
 ```
 
 ### Installation
@@ -102,55 +182,42 @@ git clone https://github.com/clairedebadts-cloud/b2b-lead-scoring-analytics.git
 cd b2b-lead-scoring-analytics
 ```
 
-2. **Install dependencies**
+2. **Create virtual environment (recommended)**
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+3. **Install dependencies**
 ```bash
 pip install -r requirements.txt
 ```
 
-3. **Download the dataset**
+4. **Download the dataset**
 - Go to [Kaggle Leads Dataset](https://www.kaggle.com/datasets/ashydv/leads-dataset)
-- Download and place in `data/` folder
+- Download `Leads.csv` and place in `data/` folder
 - Alternatively, use Kaggle API:
 ```bash
 kaggle datasets download -d ashydv/leads-dataset -p ./data/
 unzip ./data/leads-dataset.zip -d ./data/
 ```
 
-4. **Run the notebooks**
+5. **Run the notebooks**
 ```bash
 jupyter notebook
 ```
-Navigate to `notebooks/` and run them in order (01 → 04)
+Navigate to `notebooks/` and run in order: 00 → 01 → 02 → 03
 
 ---
 
-## 💡 Business Applications
+## 📈 Applications
 
-This analysis framework can be adapted for:
-- **B2B SaaS companies** optimizing their sales funnel
-- **Marketing teams** allocating budget across channels
-- **Sales operations** prioritizing high-value leads
-- **Revenue teams** forecasting pipeline health
-- **CRM managers** identifying data quality issues impacting conversion
-
----
-
-## 📈 Next Steps & Improvements
-
-- [ ] Build real-time scoring API for CRM integration
-- [ ] Add time-series analysis for lead decay modeling
-- [ ] Incorporate multi-touch attribution analysis
-- [ ] Create interactive dashboard for stakeholder consumption
-- [ ] A/B test lead scoring impact on conversion rates
-
----
-
-## 🤝 Connect
-
-**Claire de Badts**  
-[LinkedIn](https://www.linkedin.com/in/claire-de-badts-a2105075/) | [GitHub](https://github.com/clairedebadts-cloud)
-
-*Built as part of transitioning from CRM Marketing Operations to Data Science & Analytics*
+This analysis framework applies to:
+- B2B SaaS companies optimizing sales funnels
+- Marketing teams allocating budget based on channel quality
+- Sales operations prioritizing high-probability leads
+- CRM managers identifying data quality issues
+- Revenue operations forecasting pipeline health
 
 ---
 
@@ -160,7 +227,7 @@ This project is open source and available under the MIT License.
 
 ---
 
-## 🙏 Acknowledgments
+## 🙏 Data Source
 
-- Dataset source: [Kaggle - ashydv/leads-dataset](https://www.kaggle.com/datasets/ashydv/leads-dataset)
-- Inspired by real-world challenges in B2B marketing analytics
+Dataset: [Kaggle - Leads Dataset](https://www.kaggle.com/datasets/ashydv/leads-dataset)
+
